@@ -17,10 +17,8 @@ class CaseEntity:
 if __name__ == "__main__":
     from src.load_pdf import read_pdf2text
     from src.load_word import read_word2text
-
     data = {
         "zakup_name": "ЗАПАСНЫЕ ЧАСТИ ДЛЯ ТРАНСПОРТНЫХ СРЕДСТВ",  # Check if it can be founded in texts
-        "usl_isp_contr": "Обязательное электронное исполнение с использованием УПД",
         "obesp_isp_contr": "Не требуется",
         # if not "не требуется" -> check exists in техническом задании и/или в проекте контракта
         "nal_sertif|lic": [],
