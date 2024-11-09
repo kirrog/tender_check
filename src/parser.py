@@ -44,7 +44,7 @@ def parse_data_from_url(url_text: str):
                 f.write(data)
 
         if len(file_type) == 0:
-            print("Wrong endfix!!!")
+            print(f"Wrong endfix!!!: {file_name}")
             file["text"] = ""
             file["type"] = "err"
             continue
