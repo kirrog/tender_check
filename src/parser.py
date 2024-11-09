@@ -1,4 +1,5 @@
 import argparse
+import json
 import subprocess
 from pprint import pprint
 
@@ -79,4 +80,6 @@ if __name__ == "__main__":
     parser.add_argument('-url', '--url', help='URL for KC', default="https://zakupki.mos.ru/auction/9864533")
     args = parser.parse_args()
     resp_json = parse_data_from_url(args.url)
+    with open("../cases/9864533/reponse.json", "w", encoding="utf-8") as f:
+        json.dump(resp_json, f, ensure_ascii=False)
     pprint(resp_json)
