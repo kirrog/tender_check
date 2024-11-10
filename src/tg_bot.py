@@ -1,4 +1,9 @@
+import json
+
 import telebot
+
+from src.main import check_case
+from src.parser import parse_data_from_url
 
 token = None
 bot = telebot.TeleBot(token=token.txt)
@@ -8,6 +13,13 @@ bot = telebot.TeleBot(token=token.txt)
 def start_message(message):
     bot.send_message(message.chat.id, "Введите URL:")
     bot.register_next_step_handler(message)
+
+    url = f"https://zakupki.mos.ru/auction/9864533"
+    resp_json = parse_data_from_url(url)
+
+    answers = check_case(resp_json)
+
+    bot.send_message(message.chat.id, json.dumps(answers))
 
 
 @bot.message_handler(commands=['help'])
