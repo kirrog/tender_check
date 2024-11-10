@@ -5,10 +5,19 @@ from telebot.types import KeyboardButton, ReplyKeyboardMarkup
 from main import check_case
 from parser import parse_data_from_url
 
-token = None
+token = '7725548623:AAEEI6tTTaFWvolQ2bv2yvK91W3BBr6xEi4'
 bot = telebot.TeleBot(token=token)
 
 user_state = {}
+
+def get_color_emoji(percentage):
+    percentage = int(percentage)
+    if percentage < 50:
+        return "🔴"
+    elif 50 <= percentage < 80:
+        return "🟡"
+    else:
+        return "🟢"
 
 def process_url(message):
     bot.send_message(message.chat.id, "Обработка. Пожалуйста подождите")
@@ -23,8 +32,8 @@ def process_url(message):
         if answers['project']['isContractGuaranteeRequired']['value_'] == 'true':
             obespechenie_str = f"""Требуется
             Размер обеспечения на сайте: {answers['project']['contractGuaranteeAmount']['value_']}
-            Совпадение в проекте: {answers['project']['contractGuaranteeAmount']['leven_partial_ratio']}%
-            Совпадение в тз: {answers['technical']['contractGuaranteeAmount']['leven_partial_ratio']}%
+            Совпадение в проекте: {answers['project']['contractGuaranteeAmount']['leven_partial_ratio']}% {get_color_emoji(answers['project']['contractGuaranteeAmount']['leven_partial_ratio'])}
+            Совпадение в тз: {answers['technical']['contractGuaranteeAmount']['leven_partial_ratio']}% {get_color_emoji(answers['technical']['contractGuaranteeAmount']['leven_partial_ratio'])}
             """
         else:
             obespechenie_str = """Не требуется
@@ -33,8 +42,8 @@ def process_url(message):
         if 'licenseFiles_0' in answers['project']:
             sertificates_str = f"""Присутвует
             Наименование на сайте: {answers['project']['licenseFiles_0']['value_']['name']}
-            Совпадение в проекте: {answers['project']['licenseFiles_0']['leven_partial_ratio']}%
-            Совпадение в тз: {answers['technical']['licenseFiles_0']['leven_partial_ratio']}%
+            Совпадение в проекте: {answers['project']['licenseFiles_0']['leven_partial_ratio']}% {get_color_emoji(answers['project']['licenseFiles_0']['leven_partial_ratio'])}
+            Совпадение в тз: {answers['technical']['licenseFiles_0']['leven_partial_ratio']}% {get_color_emoji(answers['technical']['licenseFiles_0']['leven_partial_ratio'])}
             """
         else:
             sertificates_str = """Отсутствует
@@ -43,8 +52,8 @@ def process_url(message):
 
         if 'startCost' in answers['project']:
             cost_needed_str = f"""Начальная цена: присутствует на сайте
-            Совпадение в проекте: {answers['project']['startCost']['leven_partial_ratio']}%
-            Совпадение в тз: {answers['technical']['startCost']['leven_partial_ratio']}%
+            Совпадение в проекте: {answers['project']['startCost']['leven_partial_ratio']}% {get_color_emoji(answers['project']['startCost']['leven_partial_ratio'])}
+            Совпадение в тз: {answers['technical']['startCost']['leven_partial_ratio']}% {get_color_emoji(answers['technical']['startCost']['leven_partial_ratio'])}
     
             Максимальное значение цены контракта: отсутствет на сайте
             """
@@ -52,8 +61,8 @@ def process_url(message):
             cost_needed_str = f"""Начальная цена: отсутствует на сайте
     
                     Максимальное значение цены контракта: присутствует на сайте
-                    Совпадение в проекте: {answers['project']['startCost']['leven_partial_ratio']}%
-                    Совпадение в тз: {answers['technical']['startCost']['leven_partial_ratio']}%
+                    Совпадение в проекте: {answers['project']['startCost']['leven_partial_ratio']}% {get_color_emoji(answers['project']['startCost']['leven_partial_ratio'])}
+                    Совпадение в тз: {answers['technical']['startCost']['leven_partial_ratio']}% {get_color_emoji(answers['technical']['startCost']['leven_partial_ratio'])}
                    """
 
         date = ""
@@ -63,15 +72,15 @@ def process_url(message):
                     answers['project'][f'deliveries_{str(i)}_periodDateFrom']['value_'] is not None:
                 date += f"Этап {str(i)}\n"
                 date += f"""Дата начала поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDateFrom']['value_']}
-                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateFrom']['leven_partial_ratio']}%
-                Совпадение в тз: {answers['technical'][f'deliveries_{str(i)}_periodDateFrom']['leven_partial_ratio']}%\n
+                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateFrom']['leven_partial_ratio']}% {get_color_emoji(answers['project'][f'deliveries_{str(i)}_periodDateFrom']['leven_partial_ratio'])}
+                Совпадение в тз: {answers['technical'][f'deliveries_{str(i)}_periodDateFrom']['leven_partial_ratio']}% {get_color_emoji(answers['technical'][f'deliveries_{str(i)}_periodDateFrom']['leven_partial_ratio'])}\n
                 """
             elif f'deliveries_{str(i)}_periodDaysFrom' in answers['project'] and \
                     answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['value_'] is not None:
                 date += f"Этап {str(i)}\n"
                 date += f"""Начало срока поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['value_']}
-                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['leven_partial_ratio']}%
-                Совпадение в тз: {answers['technical'][f'deliveries_{str(i)}_periodDaysFrom']['leven_partial_ratio']}%\n
+                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['leven_partial_ratio']}% {get_color_emoji(answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['leven_partial_ratio'])}
+                Совпадение в тз: {answers['technical'][f'deliveries_{str(i)}_periodDaysFrom']['leven_partial_ratio']}% {get_color_emoji(answers['technical'][f'deliveries_{str(i)}_periodDaysFrom']['leven_partial_ratio'])}\n
                 """
             else:
                 date += "\n"
@@ -79,13 +88,13 @@ def process_url(message):
 
             if f'deliveries_{str(i)}_periodDateTo' in answers['project'] and answers['project'][f'deliveries_{str(i)}_periodDateTo']['value_'] is not None:
                 date += f"""Дата окончания поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDateTo']['value_']}
-                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateTo']['leven_partial_ratio']}%
-                Совпадение в тз: {answers['technical'][f'deliveries_{str(i)}_periodDateTo']['leven_partial_ratio']}%\n
+                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateTo']['leven_partial_ratio']}% {get_color_emoji(answers['project'][f'deliveries_{str(i)}_periodDateTo']['leven_partial_ratio'])}
+                Совпадение в тз: {answers['technical'][f'deliveries_{str(i)}_periodDateTo']['leven_partial_ratio']}% {get_color_emoji(answers['technical'][f'deliveries_{str(i)}_periodDateTo']['leven_partial_ratio'])}\n
                 """
             elif f'deliveries_{str(i)}_periodDaysTo' in answers['project'] and answers['project'][f'deliveries_{str(i)}_periodDaysTo']['value_'] is not None:
                 date += f"""Окончание срока поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDaysTo']['value_']}
-                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDaysTo']['leven_partial_ratio']}%
-                Совпадение в тз: {answers['technical'][f'deliveries_{str(i)}_periodDaysTo']['leven_partial_ratio']}%\n
+                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDaysTo']['leven_partial_ratio']}% {get_color_emoji(answers['project'][f'deliveries_{str(i)}_periodDaysTo']['leven_partial_ratio'])}
+                Совпадение в тз: {answers['technical'][f'deliveries_{str(i)}_periodDaysTo']['leven_partial_ratio']}% {get_color_emoji(answers['technical'][f'deliveries_{str(i)}_periodDaysTo']['leven_partial_ratio'])}\n
                 """
             else:
                 date += "\n"
@@ -101,9 +110,9 @@ def process_url(message):
             if f'items_{str(i)}_name' in answers['technical']:
                 specification_str += f"""  
                 Наименование спецификации на сайте: {answers['technical'][f'items_{str(i)}_name']['value_']}
-                Совпадение в ТЗ: {answers['technical'][f'items_{str(i)}_name']['leven_partial_ratio']}%
+                Совпадение в ТЗ: {answers['technical'][f'items_{str(i)}_name']['leven_partial_ratio']}% {get_color_emoji(answers['technical'][f'items_{str(i)}_name']['leven_partial_ratio'])}
                 Количество предметов на сайте: {answers['technical'][f'items_{str(i)}_currentValue']['value_']}
-                Совпадение в ТЗ: {answers['technical'][f'items_{str(i)}_currentValue']['leven_partial_ratio']}%
+                Совпадение в ТЗ: {answers['technical'][f'items_{str(i)}_currentValue']['leven_partial_ratio']}% {get_color_emoji(answers['technical'][f'items_{str(i)}_currentValue']['leven_partial_ratio'])}
                 """
             else:
                 break
@@ -111,8 +120,8 @@ def process_url(message):
         answer = f"""
             1. Название КС
             На сайте: {answers['project']['name']['value_']}
-            Совпадение в проекте: {int(answers['project']['name']['leven_partial_ratio'])}%
-            Совпадение в тз: {int(answers['technical']['name']['leven_partial_ratio'])}%
+            Совпадение в проекте: {int(answers['project']['name']['leven_partial_ratio'])}% {get_color_emoji(answers['project']['name']['leven_partial_ratio'])}
+            Совпадение в тз: {int(answers['technical']['name']['leven_partial_ratio'])}% {get_color_emoji(answers['technical']['name']['leven_partial_ratio'])}
 
             2. Обеспечение исполнения контракта
             {obespechenie_str}
@@ -134,7 +143,7 @@ def process_url(message):
         if answers['project']['isContractGuaranteeRequired']['value_'] == 'true':
             obespechenie_str = f"""Требуется
             Размер обеспечения на сайте: {answers['project']['contractGuaranteeAmount']['value_']}
-            Совпадение в проекте: {answers['project']['contractGuaranteeAmount']['leven_partial_ratio']}%
+            Совпадение в проекте: {answers['project']['contractGuaranteeAmount']['leven_partial_ratio']}% {get_color_emoji(answers['project']['contractGuaranteeAmount']['leven_partial_ratio'])}
             """
         else:
             obespechenie_str = """Не требуется
@@ -143,7 +152,7 @@ def process_url(message):
         if 'licenseFiles_0' in answers['project']:
             sertificates_str = f"""Присутвует
             Наименование на сайте: {answers['project']['licenseFiles_0']['value_']['name']}
-            Совпадение в проекте: {answers['project']['licenseFiles_0']['leven_partial_ratio']}%
+            Совпадение в проекте: {answers['project']['licenseFiles_0']['leven_partial_ratio']}% {get_color_emoji(answers['project']['licenseFiles_0']['leven_partial_ratio'])}
             """
         else:
             sertificates_str = """Отсутствует
@@ -151,7 +160,7 @@ def process_url(message):
 
         if 'startCost' in answers['project']:
             cost_needed_str = f"""Начальная цена: присутствует на сайте
-            Совпадение в проекте: {answers['project']['startCost']['leven_partial_ratio']}%
+            Совпадение в проекте: {answers['project']['startCost']['leven_partial_ratio']}% {get_color_emoji(answers['project']['startCost']['leven_partial_ratio'])}
 
             Максимальное значение цены контракта: отсутствет на сайте
             """
@@ -159,7 +168,7 @@ def process_url(message):
             cost_needed_str = f"""Начальная цена: отсутствует на сайте
 
                     Максимальное значение цены контракта: присутствует на сайте
-                    Совпадение в проекте: {answers['project']['startCost']['leven_partial_ratio']}%
+                    Совпадение в проекте: {answers['project']['startCost']['leven_partial_ratio']}% {get_color_emoji(answers['project']['startCost']['leven_partial_ratio'])}
                    """
 
         date = ""
@@ -169,13 +178,13 @@ def process_url(message):
                     answers['project'][f'deliveries_{str(i)}_periodDateFrom']['value_'] is not None:
                 date += f"Этап {str(i)}\n"
                 date += f"""Дата начала поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDateFrom']['value_']}
-                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateFrom']['leven_partial_ratio']}%
+                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateFrom']['leven_partial_ratio']}% {get_color_emoji(answers['project'][f'deliveries_{str(i)}_periodDateFrom']['leven_partial_ratio'])} \n
                 """
             elif f'deliveries_{str(i)}_periodDaysFrom' in answers['project'] and \
                     answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['value_'] is not None:
                 date += f"Этап {str(i)}\n"
                 date += f"""Начало срока поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['value_']}
-                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['leven_partial_ratio']}%
+                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['leven_partial_ratio']}% {get_color_emoji(answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['leven_partial_ratio'])} \n
                 """
             else:
                 date += "\n"
@@ -183,11 +192,11 @@ def process_url(message):
 
             if f'deliveries_{str(i)}_periodDateTo' in answers['project'] and answers['project'][f'deliveries_{str(i)}_periodDateTo']['value_'] is not None:
                 date += f"""Дата окончания поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDateTo']['value_']}
-                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateTo']['leven_partial_ratio']}%
+                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateTo']['leven_partial_ratio']}% {get_color_emoji(answers['project'][f'deliveries_{str(i)}_periodDateTo']['leven_partial_ratio'])} \n
                 """
             elif f'deliveries_{str(i)}_periodDaysTo' in answers['project'] and answers['project'][f'deliveries_{str(i)}_periodDaysTo']['value_'] is not None:
                 date += f"""Окончание срока поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDaysTo']['value_']}
-                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDaysTo']['leven_partial_ratio']}%
+                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDaysTo']['leven_partial_ratio']}% {get_color_emoji(answers['project'][f'deliveries_{str(i)}_periodDaysTo']['leven_partial_ratio'])} \n
                 """
             else:
                 date += "\n"
@@ -199,7 +208,7 @@ def process_url(message):
         answer = f"""
         1. Название КС
         На сайте: {answers['project']['name']['value_']}
-        Совпадение в проекте: {int(answers['project']['name']['leven_partial_ratio'])}%
+        Совпадение в проекте: {int(answers['project']['name']['leven_partial_ratio'])}% {get_color_emoji(answers['project']['name']['leven_partial_ratio'])}
         
         2. Обеспечение исполнения контракта
         {obespechenie_str}
