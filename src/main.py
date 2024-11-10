@@ -34,7 +34,7 @@ def search_task(value_, text_: str, text_extracted, dates_facts, money_facts, ta
         result["leven_partial_ratio"] = None
 
     if task_type == "date_search" and value_ is not None:
-        d = datetime.strptime(value_, '%d.%m.%Y')
+        d = datetime.strptime(value_[:10], '%d.%m.%Y')
         day_ = d.day
         month_ = d.month
         year_ = d.year
@@ -148,18 +148,13 @@ def check_case(resp_json):
     task_list.append(("startCost", resp_json["startCost"], "money"))
     task_list.append(("lastBetCost", resp_json["lastBetCost"], "money"))
 
-    if resp_json["startDate"]:
-        task_list.append(("startDate", resp_json["startDate"][:10], "date_search"))
-    if resp_json["endDate"]:
-        task_list.append(("endDate", resp_json["endDate"][:10], "date_search"))
+    task_list.append(("startDate", resp_json["startDate"], "date_search"))
+    task_list.append(("endDate", resp_json["endDate"], "date_search"))
 
     for i in range(len(resp_json["deliveries"])):
-        if resp_json["deliveries"][i]["periodDateFrom"]:
-            task_list.append(
-                (f"deliveries_{i}_periodDateFrom", resp_json["deliveries"][i]["periodDateFrom"][:10], "date_search"))
-        if resp_json["deliveries"][i]["periodDateTo"]:
-            task_list.append(
-                (f"deliveries_{i}_periodDateTo", resp_json["deliveries"][i]["periodDateTo"][:10], "date_search"))
+        task_list.append(
+            (f"deliveries_{i}_periodDateFrom", resp_json["deliveries"][i]["periodDateFrom"], "date_search"))
+        task_list.append((f"deliveries_{i}_periodDateTo", resp_json["deliveries"][i]["periodDateTo"], "date_search"))
 
     for i in range(len(resp_json["items"])):
         task_list.append((f"items_{i}_currentValue", resp_json["items"][i]["currentValue"], None))
