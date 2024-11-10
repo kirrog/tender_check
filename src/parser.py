@@ -86,7 +86,7 @@ def parse_data_from_url(url_text: str):
                 tables.append(pd.DataFrame(column_list).T)
             text = "\n".join([" ".join(x.split()) for x in texts if x != ""])
 
-        file['text'] = text
+        file['text'] = text + "\n" + "\n".join([json.dumps(x.to_dict('dict'), ensure_ascii=False) for x in tables])
         file['tables'] = [x.to_dict('dict') for x in tables]
         file['type'] = file_type
     return resp_json
