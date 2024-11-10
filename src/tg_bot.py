@@ -60,13 +60,15 @@ def process_url(message):
         date = ""
         i = 0
         for i in range(99999):
-            if f'deliveries_{str(i)}_periodDateFrom' in answers['project'] and answers['project'][f'deliveries_{str(i)}_periodDateFrom']['value_'] != None:
+            if f'deliveries_{str(i)}_periodDateFrom' in answers['project'] and \
+                    answers['project'][f'deliveries_{str(i)}_periodDateFrom']['value_'] is not None:
                 date += f"Этап {str(i)}\n"
                 date += f"""Дата начала поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDateFrom']['value_']}
                 Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateFrom']['leven_partial_ratio']}%
                 Совпадение в тз: {answers['technical'][f'deliveries_{str(i)}_periodDateFrom']['leven_partial_ratio']}%\n
                 """
-            elif f'deliveries_{str(i)}_periodDaysFrom' in answers['project'] and answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['value_'] != None:
+            elif f'deliveries_{str(i)}_periodDaysFrom' in answers['project'] and \
+                    answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['value_'] is not None:
                 date += f"Этап {str(i)}\n"
                 date += f"""Начало срока поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['value_']}
                 Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['leven_partial_ratio']}%
@@ -76,12 +78,12 @@ def process_url(message):
                 date += "\n"
                 break
 
-            if f'deliveries_{str(i)}_periodDateTo' in answers['project']:
-                date += f"""Дата начала поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDateTo']['value_']}
+            if f'deliveries_{str(i)}_periodDateTo' in answers['project'] and answers['project'][f'deliveries_{str(i)}_periodDateTo']['value_'] is not None:
+                date += f"""Дата окончания поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDateTo']['value_']}
                 Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateTo']['leven_partial_ratio']}%
                 Совпадение в тз: {answers['technical'][f'deliveries_{str(i)}_periodDateTo']['leven_partial_ratio']}%\n
                 """
-            elif f'deliveries_{str(i)}_periodDaysTo' in answers['project']:
+            elif f'deliveries_{str(i)}_periodDaysTo' in answers['project'] and answers['project'][f'deliveries_{str(i)}_periodDaysTo']['value_'] is not None:
                 date += f"""Окончание срока поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDaysTo']['value_']}
                 Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDaysTo']['leven_partial_ratio']}%
                 Совпадение в тз: {answers['technical'][f'deliveries_{str(i)}_periodDaysTo']['leven_partial_ratio']}%\n
@@ -165,13 +167,13 @@ def process_url(message):
         i = 0
         for i in range(99999):
             if f'deliveries_{str(i)}_periodDateFrom' in answers['project'] and \
-                    answers['project'][f'deliveries_{str(i)}_periodDateFrom']['value_'] != None:
+                    answers['project'][f'deliveries_{str(i)}_periodDateFrom']['value_'] is not None:
                 date += f"Этап {str(i)}\n"
                 date += f"""Дата начала поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDateFrom']['value_']}
                 Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateFrom']['leven_partial_ratio']}%
                 """
             elif f'deliveries_{str(i)}_periodDaysFrom' in answers['project'] and \
-                    answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['value_'] != None:
+                    answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['value_'] is not None:
                 date += f"Этап {str(i)}\n"
                 date += f"""Начало срока поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['value_']}
                 Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['leven_partial_ratio']}%
@@ -180,11 +182,11 @@ def process_url(message):
                 date += "\n"
                 break
 
-            if f'deliveries_{str(i)}_periodDateTo' in answers['project']:
-                date += f"""Дата начала поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDateTo']['value_']}
+            if f'deliveries_{str(i)}_periodDateTo' in answers['project'] and answers['project'][f'deliveries_{str(i)}_periodDateTo']['value_'] is not None:
+                date += f"""Дата окончания поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDateTo']['value_']}
                 Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateTo']['leven_partial_ratio']}%
                 """
-            elif f'deliveries_{str(i)}_periodDaysTo' in answers['project']:
+            elif f'deliveries_{str(i)}_periodDaysTo' in answers['project'] and answers['project'][f'deliveries_{str(i)}_periodDaysTo']['value_'] is not None:
                 date += f"""Окончание срока поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDaysTo']['value_']}
                 Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDaysTo']['leven_partial_ratio']}%
                 """
