@@ -20,104 +20,182 @@ def process_url(message):
     answers = check_case(resp_json)
     print(answers)
 
-    if answers['project']['isContractGuaranteeRequired']['value_'] == 'true':
-        obespechenie_str = f"""Требуется
-        Размер обеспечения на сайте: {answers['project']['contractGuaranteeAmount']['value_']}
-        Совпадение в проекте: {answers['project']['contractGuaranteeAmount']['leven_partial_ratio']}%
-        Совпадение в тз: {answers['technical']['contractGuaranteeAmount']['leven_partial_ratio']}%
-        """
-    else:
-        obespechenie_str = """Не требуется
-        """
-
-    if 'licenseFiles_0' in answers['project']:
-        sertificates_str = f"""Присутвует
-        Наименование на сайте: {answers['project']['licenseFiles_0']['value_']['name']}
-        Совпадение в проекте: {answers['project']['licenseFiles_0']['leven_partial_ratio']}%
-        Совпадение в тз: {answers['technical']['licenseFiles_0']['leven_partial_ratio']}%
-        """
-    else:
-        sertificates_str = """Отсутствует
-        """
-
-
-    if 'startCost' in answers['project']:
-        cost_needed_str = f"""Начальная цена: присутствует на сайте
-        Совпадение в проекте: {answers['project']['startCost']['leven_partial_ratio']}%
-        Совпадение в тз: {answers['technical']['startCost']['leven_partial_ratio']}%
-
-        Максимальное значение цены контракта: отсутствет на сайте
-        """
-    else:
-        cost_needed_str = f"""Начальная цена: отсутствует на сайте
-
-                Максимальное значение цены контракта: присутствует на сайте
-                Совпадение в проекте: {answers['project']['startCost']['leven_partial_ratio']}%
-                Совпадение в тз: {answers['technical']['startCost']['leven_partial_ratio']}%
-               """
-
-    date = ""
-    i = 0
-    for i in range(99999):
-        if f'deliveries_{str(i)}_periodDateFrom' in answers['project'] and answers['project'][f'deliveries_{str(i)}_periodDateFrom']['value_'] != None:
-            date += f"Этап {str(i)}\n"
-            date += f"""Дата начала поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDateFrom']['value_']}
-            Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateFrom']['leven_partial_ratio']}%
-            Совпадение в тз: {answers['technical'][f'deliveries_{str(i)}_periodDateFrom']['leven_partial_ratio']}%\n
-            """
-        else:
-            date += "\n"
-            break
-
-        if f'deliveries_{str(i)}_periodDateTo' in answers['project']:
-            date += f"""Дата начала поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDateTo']['value_']}
-            Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateTo']['leven_partial_ratio']}%
-            Совпадение в тз: {answers['technical'][f'deliveries_{str(i)}_periodDateTo']['leven_partial_ratio']}%\n
-            """
-
-        else:
-            date += "\n"
-            break
-
-
-    i = 0
     if 'items_0_name' in answers['technical']:
-        specification_str = "ТЗ присутствует\n"
-    else:
-        specification_str = "ТЗ отсутствует"
-    for i in range(99999):
-        if f'items_{str(i)}_name' in answers['technical']:
-            specification_str += f"""  
-            Наименование спецификации на сайте: {answers['technical'][f'items_{str(i)}_name']['value_']}
-            Совпадение в ТЗ: {answers['technical'][f'items_{str(i)}_name']['leven_partial_ratio']}%
-            Количество предметов на сайте: {answers['technical'][f'items_{str(i)}_currentValue']['value_']}
-            Совпадение в ТЗ: {answers['technical'][f'items_{str(i)}_currentValue']['leven_partial_ratio']}%
+        if answers['project']['isContractGuaranteeRequired']['value_'] == 'true':
+            obespechenie_str = f"""Требуется
+            Размер обеспечения на сайте: {answers['project']['contractGuaranteeAmount']['value_']}
+            Совпадение в проекте: {answers['project']['contractGuaranteeAmount']['leven_partial_ratio']}%
+            Совпадение в тз: {answers['technical']['contractGuaranteeAmount']['leven_partial_ratio']}%
             """
         else:
-            break
+            obespechenie_str = """Не требуется
+            """
+
+        if 'licenseFiles_0' in answers['project']:
+            sertificates_str = f"""Присутвует
+            Наименование на сайте: {answers['project']['licenseFiles_0']['value_']['name']}
+            Совпадение в проекте: {answers['project']['licenseFiles_0']['leven_partial_ratio']}%
+            Совпадение в тз: {answers['technical']['licenseFiles_0']['leven_partial_ratio']}%
+            """
+        else:
+            sertificates_str = """Отсутствует
+            """
 
 
-    answer = f"""
-    1. Название КС
-    На сайте: {answers['project']['name']['value_']}
-    Совпадение в проекте: {int(answers['project']['name']['leven_partial_ratio'])}%
-    Совпадение в тз: {int(answers['technical']['name']['leven_partial_ratio'])}%
+        if 'startCost' in answers['project']:
+            cost_needed_str = f"""Начальная цена: присутствует на сайте
+            Совпадение в проекте: {answers['project']['startCost']['leven_partial_ratio']}%
+            Совпадение в тз: {answers['technical']['startCost']['leven_partial_ratio']}%
     
-    2. Обеспечение исполнения контракта
-    {obespechenie_str}
+            Максимальное значение цены контракта: отсутствет на сайте
+            """
+        else:
+            cost_needed_str = f"""Начальная цена: отсутствует на сайте
     
-    3. Наличие сертификатов/лицензий
-    {sertificates_str}
-    
-    4. График поставки
-    {date}
-  
-    5. Цена контракта
-    {cost_needed_str}
- 
-    6. Спецификация
-    {specification_str}
-    """
+                    Максимальное значение цены контракта: присутствует на сайте
+                    Совпадение в проекте: {answers['project']['startCost']['leven_partial_ratio']}%
+                    Совпадение в тз: {answers['technical']['startCost']['leven_partial_ratio']}%
+                   """
+
+        date = ""
+        i = 0
+        for i in range(99999):
+            if f'deliveries_{str(i)}_periodDateFrom' in answers['project'] and answers['project'][f'deliveries_{str(i)}_periodDateFrom']['value_'] != None:
+                date += f"Этап {str(i)}\n"
+                date += f"""Дата начала поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDateFrom']['value_']}
+                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateFrom']['leven_partial_ratio']}%
+                Совпадение в тз: {answers['technical'][f'deliveries_{str(i)}_periodDateFrom']['leven_partial_ratio']}%\n
+                """
+            else:
+                date += "\n"
+                break
+
+            if f'deliveries_{str(i)}_periodDateTo' in answers['project']:
+                date += f"""Дата начала поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDateTo']['value_']}
+                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateTo']['leven_partial_ratio']}%
+                Совпадение в тз: {answers['technical'][f'deliveries_{str(i)}_periodDateTo']['leven_partial_ratio']}%\n
+                """
+
+            else:
+                date += "\n"
+                break
+
+
+        i = 0
+        if 'items_0_name' in answers['technical']:
+            specification_str = "ТЗ присутствует\n"
+        else:
+            specification_str = "ТЗ отсутствует"
+        for i in range(99999):
+            if f'items_{str(i)}_name' in answers['technical']:
+                specification_str += f"""  
+                Наименование спецификации на сайте: {answers['technical'][f'items_{str(i)}_name']['value_']}
+                Совпадение в ТЗ: {answers['technical'][f'items_{str(i)}_name']['leven_partial_ratio']}%
+                Количество предметов на сайте: {answers['technical'][f'items_{str(i)}_currentValue']['value_']}
+                Совпадение в ТЗ: {answers['technical'][f'items_{str(i)}_currentValue']['leven_partial_ratio']}%
+                """
+            else:
+                break
+
+        answer = f"""
+            1. Название КС
+            На сайте: {answers['project']['name']['value_']}
+            Совпадение в проекте: {int(answers['project']['name']['leven_partial_ratio'])}%
+            Совпадение в тз: {int(answers['technical']['name']['leven_partial_ratio'])}%
+
+            2. Обеспечение исполнения контракта
+            {obespechenie_str}
+
+            3. Наличие сертификатов/лицензий
+            {sertificates_str}
+
+            4. График поставки
+            {date}
+
+            5. Цена контракта
+            {cost_needed_str}
+
+            6. Спецификация
+            {specification_str}
+            """
+
+    else:
+        if answers['project']['isContractGuaranteeRequired']['value_'] == 'true':
+            obespechenie_str = f"""Требуется
+            Размер обеспечения на сайте: {answers['project']['contractGuaranteeAmount']['value_']}
+            Совпадение в проекте: {answers['project']['contractGuaranteeAmount']['leven_partial_ratio']}%
+            """
+        else:
+            obespechenie_str = """Не требуется
+            """
+
+        if 'licenseFiles_0' in answers['project']:
+            sertificates_str = f"""Присутвует
+            Наименование на сайте: {answers['project']['licenseFiles_0']['value_']['name']}
+            Совпадение в проекте: {answers['project']['licenseFiles_0']['leven_partial_ratio']}%
+            """
+        else:
+            sertificates_str = """Отсутствует
+            """
+
+        if 'startCost' in answers['project']:
+            cost_needed_str = f"""Начальная цена: присутствует на сайте
+            Совпадение в проекте: {answers['project']['startCost']['leven_partial_ratio']}%
+
+            Максимальное значение цены контракта: отсутствет на сайте
+            """
+        else:
+            cost_needed_str = f"""Начальная цена: отсутствует на сайте
+
+                    Максимальное значение цены контракта: присутствует на сайте
+                    Совпадение в проекте: {answers['project']['startCost']['leven_partial_ratio']}%
+                   """
+
+        date = ""
+        i = 0
+        for i in range(99999):
+            if f'deliveries_{str(i)}_periodDateFrom' in answers['project'] and \
+                    answers['project'][f'deliveries_{str(i)}_periodDateFrom']['value_'] != None:
+                date += f"Этап {str(i)}\n"
+                date += f"""Дата начала поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDateFrom']['value_']}
+                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateFrom']['leven_partial_ratio']}%
+                """
+            else:
+                date += "\n"
+                break
+
+            if f'deliveries_{str(i)}_periodDateTo' in answers['project']:
+                date += f"""Дата начала поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDateTo']['value_']}
+                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateTo']['leven_partial_ratio']}%
+                """
+
+            else:
+                date += "\n"
+                break
+
+
+        specification_str = "ТЗ отсутствует"
+
+        answer = f"""
+        1. Название КС
+        На сайте: {answers['project']['name']['value_']}
+        Совпадение в проекте: {int(answers['project']['name']['leven_partial_ratio'])}%
+        
+        2. Обеспечение исполнения контракта
+        {obespechenie_str}
+        
+        3. Наличие сертификатов/лицензий
+        {sertificates_str}
+        
+        4. График поставки
+        {date}
+      
+        5. Цена контракта
+        {cost_needed_str}
+     
+        6. Спецификация
+        {specification_str}
+        """
 
     # answers['project']['name'] answers['technical']['name'] # Вывести имя (1)
     # answers['project']['isContractGuarateeRequired']['value'] answers['technical']['isContractGuarateeRequired']['value']# если да, то напечатать: answers['ContractGuaranteeAmount'] (2)
