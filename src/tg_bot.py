@@ -1,5 +1,3 @@
-import json
-
 import telebot
 from telebot import types
 from telebot.types import KeyboardButton, ReplyKeyboardMarkup
@@ -7,12 +5,13 @@ from telebot.types import KeyboardButton, ReplyKeyboardMarkup
 from main import check_case
 from parser import parse_data_from_url
 
-token = "7725548623:AAEEI6tTTaFWvolQ2bv2yvK91W3BBr6xEi4"
+token = None
 bot = telebot.TeleBot(token=token)
 
 user_state = {}
 
 def process_url(message):
+    bot.send_message(message.chat.id, "Обработка. Пожалуйста подождите")
     url2process = message.text
     print(url2process)
     resp_json = parse_data_from_url(url2process)
