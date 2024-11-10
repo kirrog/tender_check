@@ -6,20 +6,25 @@ from src.main import check_case
 from src.parser import parse_data_from_url
 
 token = None
-bot = telebot.TeleBot(token=token.txt)
+bot = telebot.TeleBot(token=token)
+
+
+def process_url(message):
+    url2process = message.text
+    print(url2process)
+    resp_json = parse_data_from_url(url2process)
+
+    answers = check_case(resp_json)
+    print(answers)
+
+    for k, v in answers.items():
+        bot.send_message(message.chat.id, f"{k}: {v}")
 
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
     bot.send_message(message.chat.id, "Введите URL:")
-    bot.register_next_step_handler(message)
-
-    url = f"https://zakupki.mos.ru/auction/9864533"
-    resp_json = parse_data_from_url(url)
-
-    answers = check_case(resp_json)
-
-    bot.send_message(message.chat.id, json.dumps(answers))
+    bot.register_next_step_handler(message, process_url)
 
 
 @bot.message_handler(commands=['help'])
