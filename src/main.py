@@ -23,11 +23,16 @@ def search_task(value_: str, text_: str):
 
 def check_case(resp_json):
     project_dogovor_list = [x["text"] for x in resp_json['files'] if
-                            x["type"] == "pdf" or "Проект контракта" in x["name"]]
+                            x["type"] == "pdf"
+                            or "проект контракта" in x["name"].lower()
+                            or "проект договора" in x["name"].lower()
+                            ]
     project_dogovor_text = project_dogovor_list[0] if len(project_dogovor_list) > 0 else None
     technical_task_list = [x["text"] for x in resp_json['files'] if x["type"] == "docs"
                            or "тз" in x["name"].lower()
-                           or "техническое задание" in x["name"].lower()]
+                           or "техническое задание" in x["name"].lower()
+                           or "тех зад" in x["name"].lower()
+                           ]
     technical_task_text = technical_task_list[0] if len(technical_task_list) > 0 else None
 
     task_list = []

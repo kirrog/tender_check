@@ -8,6 +8,9 @@ import docx
 import requests
 
 
+from tabula import read_pdf
+
+
 def parse_data_from_url(url_text: str):
     resp = requests.get(f'https://zakupki.mos.ru/newapi/api/Auction/Get?auctionId={url_text.rsplit("/", 1)[-1]}')
     resp_json = resp.json()
@@ -52,10 +55,15 @@ def parse_data_from_url(url_text: str):
         text = ""
         if file_type == "pdf":
             reader = PyPDF2.PdfReader(pdf_file_path)
+            tables = read_pdf(pdf_file_path, pages="all")
+
             pdf_texts = []
             for i in range(len(reader.pages)):
                 page_text = reader.pages[i].extract_text()
                 pdf_texts.append(page_text)
+
+            for table in tables:
+                pdf_texts.append("\n".join(str(table).split("\n")))
             text = "\n".join([" ".join(x.split()) for x in pdf_texts if x != ""])
 
         if file_type == "doc":
@@ -68,6 +76,10 @@ def parse_data_from_url(url_text: str):
             texts = []
             for paragraph in doc.paragraphs:
                 texts.append(paragraph.text)
+            for table in doc.tables:
+                for col in table.columns:
+                    for cell in col.cells:
+                        texts.append(str(cell.text))
             text = "\n".join([" ".join(x.split()) for x in texts if x != ""])
 
         file['text'] = text
