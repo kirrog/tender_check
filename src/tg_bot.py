@@ -7,7 +7,7 @@ from telebot.types import KeyboardButton, ReplyKeyboardMarkup
 from main import check_case
 from parser import parse_data_from_url
 
-token = None
+token = "7725548623:AAEEI6tTTaFWvolQ2bv2yvK91W3BBr6xEi4"
 bot = telebot.TeleBot(token=token)
 
 user_state = {}
@@ -66,6 +66,12 @@ def process_url(message):
                 Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateFrom']['leven_partial_ratio']}%
                 Совпадение в тз: {answers['technical'][f'deliveries_{str(i)}_periodDateFrom']['leven_partial_ratio']}%\n
                 """
+            elif f'deliveries_{str(i)}_periodDaysFrom' in answers['project'] and answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['value_'] != None:
+                date += f"Этап {str(i)}\n"
+                date += f"""Начало срока поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['value_']}
+                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['leven_partial_ratio']}%
+                Совпадение в тз: {answers['technical'][f'deliveries_{str(i)}_periodDaysFrom']['leven_partial_ratio']}%\n
+                """
             else:
                 date += "\n"
                 break
@@ -75,7 +81,11 @@ def process_url(message):
                 Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateTo']['leven_partial_ratio']}%
                 Совпадение в тз: {answers['technical'][f'deliveries_{str(i)}_periodDateTo']['leven_partial_ratio']}%\n
                 """
-
+            elif f'deliveries_{str(i)}_periodDaysTo' in answers['project']:
+                date += f"""Окончание срока поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDaysTo']['value_']}
+                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDaysTo']['leven_partial_ratio']}%
+                Совпадение в тз: {answers['technical'][f'deliveries_{str(i)}_periodDaysTo']['leven_partial_ratio']}%\n
+                """
             else:
                 date += "\n"
                 break
@@ -160,6 +170,12 @@ def process_url(message):
                 date += f"""Дата начала поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDateFrom']['value_']}
                 Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateFrom']['leven_partial_ratio']}%
                 """
+            elif f'deliveries_{str(i)}_periodDaysFrom' in answers['project'] and \
+                    answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['value_'] != None:
+                date += f"Этап {str(i)}\n"
+                date += f"""Начало срока поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['value_']}
+                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDaysFrom']['leven_partial_ratio']}%
+                """
             else:
                 date += "\n"
                 break
@@ -168,7 +184,10 @@ def process_url(message):
                 date += f"""Дата начала поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDateTo']['value_']}
                 Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateTo']['leven_partial_ratio']}%
                 """
-
+            elif f'deliveries_{str(i)}_periodDaysTo' in answers['project']:
+                date += f"""Окончание срока поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDaysTo']['value_']}
+                Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDaysTo']['leven_partial_ratio']}%
+                """
             else:
                 date += "\n"
                 break
