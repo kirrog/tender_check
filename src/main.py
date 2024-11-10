@@ -155,6 +155,8 @@ def check_case(resp_json):
         task_list.append(
             (f"deliveries_{i}_periodDateFrom", resp_json["deliveries"][i]["periodDateFrom"], "date_search"))
         task_list.append((f"deliveries_{i}_periodDateTo", resp_json["deliveries"][i]["periodDateTo"], "date_search"))
+        task_list.append((f"deliveries_{i}_periodDaysFrom", resp_json["deliveries"][i]["periodDaysFrom"], None))
+        task_list.append((f"deliveries_{i}_periodDaysFrom", resp_json["deliveries"][i]["periodDaysTo"], None))
 
     for i in range(len(resp_json["items"])):
         task_list.append((f"items_{i}_currentValue", resp_json["items"][i]["currentValue"], None))
