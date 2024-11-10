@@ -33,7 +33,7 @@ def search_task(value_, text_: str, text_extracted, dates_facts, money_facts, ta
         result["exists"] = None
         result["leven_partial_ratio"] = None
 
-    if task_type == "date_search":
+    if task_type == "date_search" and value_ is not None:
         d = datetime.strptime(value_, '%d.%m.%Y')
         day_ = d.day
         month_ = d.month
@@ -43,7 +43,7 @@ def search_task(value_, text_: str, text_extracted, dates_facts, money_facts, ta
             if str(day) == str(day_) and str(month) == str(month_) and str(year) == str(year_):
                 result["extractor_match"] = True
 
-    if task_type == "money":
+    if task_type == "money" and value_ is not None:
         money = float(value_)
         result["extractor_match"] = False
         for start, stop, amount, currency in money_facts:
@@ -183,7 +183,7 @@ def check_case(resp_json):
 
 
 if __name__ == "__main__":
-    case_id = "9864533"
+    case_id = "9869909"
     url = f"https://zakupki.mos.ru/auction/{case_id}"
     resp_json = parse_data_from_url(url)
 
