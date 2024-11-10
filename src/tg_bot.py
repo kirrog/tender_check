@@ -1,6 +1,8 @@
 import json
 
 import telebot
+from telebot import types
+from telebot.types import KeyboardButton, ReplyKeyboardMarkup
 
 from main import check_case
 from parser import parse_data_from_url
@@ -8,6 +10,7 @@ from parser import parse_data_from_url
 token = "7725548623:AAEEI6tTTaFWvolQ2bv2yvK91W3BBr6xEi4"
 bot = telebot.TeleBot(token=token)
 
+user_state = {}
 
 def process_url(message):
     url2process = message.text
@@ -56,7 +59,7 @@ def process_url(message):
     date = ""
     i = 0
     for i in range(99999):
-        if f'deliveries_{str(i)}_periodDateFrom' in answers['project'] and answers['project'][f'deliveries_{str(i)}_periodDateFrom']['value_'] != 'None':
+        if f'deliveries_{str(i)}_periodDateFrom' in answers['project'] and answers['project'][f'deliveries_{str(i)}_periodDateFrom']['value_'] != None:
             date += f"Этап {str(i)}\n"
             date += f"""Дата начала поставки на сайте: {answers['project'][f'deliveries_{str(i)}_periodDateFrom']['value_']}
             Совпадение в проекте: {answers['project'][f'deliveries_{str(i)}_periodDateFrom']['leven_partial_ratio']}%
@@ -126,7 +129,28 @@ def process_url(message):
     #     bot.send_message(message.chat.id, f"{k}: {v}")
 
     bot.send_message(message.chat.id, answer)
+    markup = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+    button1 = KeyboardButton('Снять с публикации КС')
+    button2 = KeyboardButton('Подтвердить корректность КС')
 
+    markup.add(button1, button2)
+    bot.send_message(message.chat.id, "Выберите одну из опций:", reply_markup=markup)
+
+
+# Обработка сообщений
+@bot.message_handler(func=lambda message: message.text == "Снять с публикации КС")
+def remove_from_publication(message):
+    user_state[message.chat.id] = 'waiting_for_reason'
+    bot.send_message(message.chat.id, "Пожалуйста, укажите причину снятия с публикации",
+                     reply_markup=types.ReplyKeyboardRemove())
+
+
+# Обработка текста с причиной
+@bot.message_handler(func=lambda message: user_state.get(message.chat.id) == 'waiting_for_reason')
+def handle_reason(message):
+    reason = message.text
+    bot.send_message(message.chat.id, f"Снято с публикации по причине: {reason}")
+    user_state[message.chat.id] = None
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
