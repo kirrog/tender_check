@@ -243,6 +243,9 @@ def remove_from_publication(message):
     bot.send_message(message.chat.id, "Пожалуйста, укажите причину снятия с публикации",
                      reply_markup=types.ReplyKeyboardRemove())
 
+@bot.message_handler(func=lambda message: message.text == "Подтвердить корректность КС")
+def confirm_correctness(message):
+    bot.send_message(message.chat.id, "КС подтверждена!", reply_markup=types.ReplyKeyboardRemove())
 
 # Обработка текста с причиной
 @bot.message_handler(func=lambda message: user_state.get(message.chat.id) == 'waiting_for_reason')
