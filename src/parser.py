@@ -5,9 +5,8 @@ from pprint import pprint
 
 import PyPDF2
 import docx
+import pandas as pd
 import requests
-
-
 from tabula import read_pdf
 
 
@@ -53,17 +52,18 @@ def parse_data_from_url(url_text: str):
             continue
 
         text = ""
+        tables = []
         if file_type == "pdf":
             reader = PyPDF2.PdfReader(pdf_file_path)
-            tables = read_pdf(pdf_file_path, pages="all")
+            tables_raw = read_pdf(pdf_file_path, pages="all")
 
             pdf_texts = []
             for i in range(len(reader.pages)):
                 page_text = reader.pages[i].extract_text()
                 pdf_texts.append(page_text)
 
-            for table in tables:
-                pdf_texts.append("\n".join(str(table).split("\n")))
+            for table in tables_raw:
+                tables.append(table)
             text = "\n".join([" ".join(x.split()) for x in pdf_texts if x != ""])
 
         if file_type == "doc":
@@ -77,12 +77,17 @@ def parse_data_from_url(url_text: str):
             for paragraph in doc.paragraphs:
                 texts.append(paragraph.text)
             for table in doc.tables:
+                column_list = []
                 for col in table.columns:
+                    l = []
+                    column_list.append(l)
                     for cell in col.cells:
-                        texts.append(str(cell.text))
+                        l.append(str(cell.text))
+                tables.append(pd.DataFrame(column_list).T)
             text = "\n".join([" ".join(x.split()) for x in texts if x != ""])
 
         file['text'] = text
+        file['tables'] = [x.to_dict('dict') for x in tables]
         file['type'] = file_type
     return resp_json
 

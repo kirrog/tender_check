@@ -7,7 +7,7 @@ from telebot.types import KeyboardButton, ReplyKeyboardMarkup
 from main import check_case
 from parser import parse_data_from_url
 
-token = "7725548623:AAEEI6tTTaFWvolQ2bv2yvK91W3BBr6xEi4"
+token = None
 bot = telebot.TeleBot(token=token)
 
 user_state = {}

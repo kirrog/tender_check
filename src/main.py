@@ -2,13 +2,11 @@ import json
 from datetime import datetime
 
 from fuzzywuzzy import fuzz
-from natasha import MorphVocab
 from natasha import (
-    NamesExtractor,
-    AddrExtractor,
     DatesExtractor,
     MoneyExtractor
 )
+from natasha import MorphVocab
 
 from src.parser import parse_data_from_url
 
@@ -21,6 +19,9 @@ moneyExtractor = MoneyExtractor(morph_vocab)
 
 def search_task(value_, text_: str, text_extracted, dates_facts, money_facts, task_type):
     result = dict()
+    if type(value_) is float:
+        if value_ % 1.0 == 0:
+            value_ = int(value_)
     if type(value_) in [int, float]:
         value_ = str(value_)
     result["value_"] = value_
@@ -142,8 +143,7 @@ def check_case(resp_json):
     task_list.append(("isContractGuaranteeRequired", resp_json["isContractGuaranteeRequired"], None))
     task_list.append(("contractGuaranteeAmount", resp_json["contractGuaranteeAmount"], "money"))
 
-    for i in range(len(resp_json["licenseFiles"])):
-        task_list.append((f"licenseFiles_{i}_name", resp_json["licenseFiles"][i]["fileName"], None))
+    task_list.append(("uploadLicenseDocumentsComment", resp_json["uploadLicenseDocumentsComment"], None))
 
     task_list.append(("startCost", resp_json["startCost"], "money"))
     task_list.append(("lastBetCost", resp_json["lastBetCost"], "money"))
