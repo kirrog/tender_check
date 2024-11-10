@@ -140,7 +140,7 @@ def check_case(resp_json):
 
     task_list.append(("name", resp_json["name"], None))
     task_list.append(("isContractGuaranteeRequired", resp_json["isContractGuaranteeRequired"], None))
-    task_list.append(("contractGuaranteeAmount", resp_json["contractGuaranteeAmount"], None))
+    task_list.append(("contractGuaranteeAmount", resp_json["contractGuaranteeAmount"], "money"))
 
     for i in range(len(resp_json["licenseFiles"])):
         task_list.append((f"licenseFiles_{i}_name", resp_json["licenseFiles"][i]["fileName"], None))
