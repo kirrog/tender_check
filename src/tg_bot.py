@@ -1,6 +1,8 @@
 import json
 
 import telebot
+from telebot import types
+from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 
 from src.main import check_case
 from src.parser import parse_data_from_url
@@ -8,6 +10,7 @@ from src.parser import parse_data_from_url
 token = None
 bot = telebot.TeleBot(token=token)
 
+user_state = {}
 
 def process_url(message):
     url2process = message.text
@@ -19,6 +22,32 @@ def process_url(message):
 
     for k, v in answers.items():
         bot.send_message(message.chat.id, f"{k}: {v}")
+
+    markup = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+    button1 = KeyboardButton('Снять с публикации КС')
+    button2 = KeyboardButton('Подтвердить корректность КС')
+
+    markup.add(button1, button2)
+    bot.send_message(message.chat.id, "Выберите одну из опций:", reply_markup=markup)
+
+
+# Обработка сообщений
+@bot.message_handler(func=lambda message: message.text == "Снять с публикации КС")
+def remove_from_publication(message):
+    user_state[message.chat.id] = 'waiting_for_reason'
+    bot.send_message(message.chat.id, "Пожалуйста, укажите причину снятия с публикации",
+                     reply_markup=types.ReplyKeyboardRemove())
+
+# Обработка текста с причиной
+@bot.message_handler(func=lambda message: user_state.get(message.chat.id) == 'waiting_for_reason')
+def handle_reason(message):
+    reason = message.text
+    bot.send_message(message.chat.id, f"Снято с публикации по причине: {reason}")
+    user_state[message.chat.id] = None
+
+@bot.message_handler(func=lambda message: message.text == "Подтвердить корректность КС")
+def confirm_correctness(message):
+    bot.send_message(message.chat.id, "КС подтверждена!", reply_markup=types.ReplyKeyboardRemove())
 
 
 @bot.message_handler(commands=['start'])
